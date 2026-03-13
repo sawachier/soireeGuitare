@@ -76,6 +76,16 @@ const file = chanson.body ?? '';
       <div id="lyrics-rendered"></div>
     </div>
 
+    <!-- Auto-scroll -->
+    <button class="autoscroll-fab" id="autoscroll-btn" title="Auto-scroll">
+      <span id="autoscroll-icon">▶</span>
+    </button>
+    <div class="autoscroll-speed" id="autoscroll-speed" hidden>
+      <button class="btn btn-speed" id="speed-down">−</button>
+      <span id="speed-label">1x</span>
+      <button class="btn btn-speed" id="speed-up">+</button>
+    </div>
+
     <!-- Navigation -->
     <nav class="song-nav">
       {prev ? (
@@ -186,17 +196,28 @@ const file = chanson.body ?? '';
     overflow-x: auto;
   }
 
+  .lyrics :global(.chord-pair) {
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
   .lyrics :global(.chord) {
+    display: block;
     color: var(--accent);
     font-weight: 700;
-    font-size: 0.9em;
-    position: relative;
-    top: -0.1em;
+    font-size: 0.82em;
+    line-height: 1.3;
+    white-space: nowrap;
   }
 
   .lyrics :global(.line) {
     display: block;
     min-height: 1.5em;
+  }
+
+  .lyrics :global(.line.has-chords) {
+    line-height: 1.4;
+    margin-top: 0.3em;
   }
 
   .lyrics :global(.section-refrain) {
@@ -228,6 +249,68 @@ const file = chanson.body ?? '';
 
   :global(body.view-musician) .musician-only {
     display: flex;
+  }
+
+  /* Auto-scroll FAB */
+  .autoscroll-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: background 0.2s;
+  }
+
+  .autoscroll-fab:hover {
+    background: var(--accent-hover, #f0a020);
+  }
+
+  .autoscroll-fab.active {
+    background: #f87171;
+  }
+
+  .autoscroll-speed {
+    position: fixed;
+    bottom: 5rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .btn-speed {
+    width: 1.8rem;
+    height: 1.8rem;
+    padding: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #speed-label {
+    min-width: 1.8rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.85rem;
   }
 </style>
 
@@ -261,16 +344,13 @@ const file = chanson.body ?? '';
   function parseAndRender(raw: string, semitones: number, showChords: boolean): string {
     const lines = raw.split('\n');
     let html = '';
-    let inRefrain = false;
 
     for (const line of lines) {
       if (line.trim() === '{refrain}') {
-        inRefrain = true;
         html += '<div class="section-refrain">';
         continue;
       }
       if (line.trim() === '{/refrain}') {
-        inRefrain = false;
         html += '</div>';
         continue;
       }
@@ -279,23 +359,50 @@ const file = chanson.body ?? '';
         continue;
       }
 
-      // Parse [Chord]lyrics
-      let lineHtml = '';
       const regex = /\[([^\]]+)\]/g;
       let lastIndex = 0;
       let m;
+      let lineHtml = '';
 
-      while ((m = regex.exec(line)) !== null) {
-        // Text before chord
-        lineHtml += escapeHtml(line.slice(lastIndex, m.index));
-        if (showChords) {
-          const transposed = transposeChord(m[1], semitones);
-          lineHtml += `<span class="chord">${escapeHtml(transposed)}</span>`;
+      if (showChords) {
+        // Build chord-pair segments: chord displayed above its lyrics
+        const segments: { chord: string | null; text: string }[] = [];
+        while ((m = regex.exec(line)) !== null) {
+          const textBefore = line.slice(lastIndex, m.index);
+          if (segments.length === 0 && textBefore) {
+            segments.push({ chord: null, text: textBefore });
+          } else if (segments.length > 0) {
+            segments[segments.length - 1].text += textBefore;
+          }
+          segments.push({ chord: transposeChord(m[1], semitones), text: '' });
+          lastIndex = regex.lastIndex;
         }
-        lastIndex = regex.lastIndex;
+        const remainder = line.slice(lastIndex);
+        if (segments.length > 0) {
+          segments[segments.length - 1].text += remainder;
+        }
+
+        if (segments.length > 0) {
+          for (const seg of segments) {
+            const chordHtml = seg.chord
+              ? `<span class="chord">${escapeHtml(seg.chord)}</span>`
+              : '<span class="chord">&nbsp;</span>';
+            const textHtml = escapeHtml(seg.text) || '&nbsp;';
+            lineHtml += `<span class="chord-pair">${chordHtml}${textHtml}</span>`;
+          }
+          html += `<span class="line has-chords">${lineHtml}</span>`;
+        } else {
+          html += `<span class="line">${escapeHtml(line)}</span>`;
+        }
+      } else {
+        // Public view: lyrics only, strip chords
+        while ((m = regex.exec(line)) !== null) {
+          lineHtml += escapeHtml(line.slice(lastIndex, m.index));
+          lastIndex = regex.lastIndex;
+        }
+        lineHtml += escapeHtml(line.slice(lastIndex));
+        html += `<span class="line">${lineHtml}</span>`;
       }
-      lineHtml += escapeHtml(line.slice(lastIndex));
-      html += `<span class="line">${lineHtml}</span>`;
     }
     return html;
   }
@@ -354,4 +461,52 @@ const file = chanson.body ?? '';
   // Init
   const saved = localStorage.getItem('view');
   if (saved) setView(saved); else render();
+
+  // === Auto-scroll ===
+  const scrollBtn = document.getElementById('autoscroll-btn')!;
+  const scrollIcon = document.getElementById('autoscroll-icon')!;
+  const speedPanel = document.getElementById('autoscroll-speed')!;
+  const speedLabel = document.getElementById('speed-label')!;
+  const speedUp = document.getElementById('speed-up')!;
+  const speedDown = document.getElementById('speed-down')!;
+
+  const SPEEDS = [0.5, 1, 1.5, 2, 3];
+  let speedIndex = 1;
+  let scrolling = false;
+  let scrollRAF: number | null = null;
+
+  function updateSpeedLabel() {
+    speedLabel.textContent = SPEEDS[speedIndex] + 'x';
+  }
+
+  function autoScroll() {
+    if (!scrolling) return;
+    window.scrollBy(0, SPEEDS[speedIndex] * 0.8);
+    scrollRAF = requestAnimationFrame(autoScroll);
+  }
+
+  scrollBtn.addEventListener('click', () => {
+    scrolling = !scrolling;
+    if (scrolling) {
+      scrollBtn.classList.add('active');
+      scrollIcon.textContent = '⏸';
+      speedPanel.hidden = false;
+      scrollRAF = requestAnimationFrame(autoScroll);
+    } else {
+      scrollBtn.classList.remove('active');
+      scrollIcon.textContent = '▶';
+      speedPanel.hidden = true;
+      if (scrollRAF) cancelAnimationFrame(scrollRAF);
+    }
+  });
+
+  speedUp.addEventListener('click', () => {
+    if (speedIndex < SPEEDS.length - 1) speedIndex++;
+    updateSpeedLabel();
+  });
+
+  speedDown.addEventListener('click', () => {
+    if (speedIndex > 0) speedIndex--;
+    updateSpeedLabel();
+  });
 </script>

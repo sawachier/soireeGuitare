@@ -38,7 +38,8 @@ const base = import.meta.env.BASE_URL;
     </main>
 
     <footer>
-      <p>🎸 Soirée Guitare Feu de Camp</p>
+      <p>🎸 Soirée Guitare Feu de Camp — 6 juin 2026</p>
+      <p class="footer-links"><a href={`${base}chansons/`}>Set-list</a></p>
     </footer>
   </body>
 </html>
@@ -140,6 +141,14 @@ const base = import.meta.env.BASE_URL;
     font-size: 0.85rem;
     border-top: 1px solid var(--border);
     margin-top: 2rem;
+  }
+
+  .footer-links {
+    margin-top: 0.4rem;
+  }
+
+  .footer-links a {
+    color: var(--accent);
   }
 
   /* === Utilities === */
