@@ -1,0 +1,207 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Soirée guitare feu de camp — Chante avec nous !" } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} | Soirée Guitare</title>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | Soirée Guitare`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={`${base}og-image.jpg`} />
+
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href={base} class="nav-logo">🔥 Soirée Guitare</a>
+      <div class="nav-links">
+        <a href={base}>Accueil</a>
+        <a href={`${base}chansons/`}>Set-list</a>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p>🎸 Soirée Guitare Feu de Camp</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  /* === Reset === */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* === Palette feu de camp === */
+  :root {
+    --bg-primary: #1a1209;
+    --bg-secondary: #2a1f10;
+    --bg-card: #33261488;
+    --text-primary: #f5e6d0;
+    --text-secondary: #c4a882;
+    --accent: #e8943a;
+    --accent-hover: #f0a84e;
+    --accent-glow: #e8943a33;
+    --border: #4a361e;
+    --font-body: system-ui, -apple-system, sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --max-width: 800px;
+  }
+
+  html {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a:hover {
+    color: var(--accent-hover);
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+
+  /* === Navbar === */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent) !important;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .nav-links a:hover {
+    color: var(--accent);
+  }
+
+  /* === Footer === */
+  footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  /* === Utilities === */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    backdrop-filter: blur(4px);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .btn-accent:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+</style>

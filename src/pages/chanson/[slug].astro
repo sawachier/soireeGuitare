@@ -1,0 +1,357 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const chansons = await getCollection('chansons');
+  const sorted = chansons.sort((a, b) => a.data.order - b.data.order);
+  return sorted.map((chanson, index) => ({
+    params: { slug: chanson.id },
+    props: {
+      chanson,
+      prev: index > 0 ? sorted[index - 1] : null,
+      next: index < sorted.length - 1 ? sorted[index + 1] : null,
+    },
+  }));
+}
+
+const { chanson, prev, next } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const rawBody = await Astro.slots.render('default');
+
+// Read the raw markdown body (not rendered HTML)
+const file = chanson.body ?? '';
+---
+
+<BaseLayout title={`${chanson.data.title} — ${chanson.data.artist}`}>
+  <div class="song-page">
+    <!-- Header -->
+    <div class="song-header">
+      <a href={`${base}chansons/`} class="back-link">← Set-list</a>
+      <h1>{chanson.data.title}</h1>
+      <p class="song-artist">{chanson.data.artist}</p>
+    </div>
+
+    <!-- Metadata (musician view) -->
+    <div class="song-meta musician-only card">
+      <div class="meta-item">
+        <span class="meta-label">Tonalité</span>
+        <span class="meta-value" id="current-key">{chanson.data.key}</span>
+      </div>
+      {chanson.data.capo > 0 && (
+        <div class="meta-item">
+          <span class="meta-label">Capo</span>
+          <span class="meta-value">Fret {chanson.data.capo}</span>
+        </div>
+      )}
+      <div class="meta-item">
+        <span class="meta-label">Tempo</span>
+        <span class="meta-value">{chanson.data.tempo}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Difficulté</span>
+        <span class="meta-value">{chanson.data.difficulty}</span>
+      </div>
+      {chanson.data.pdf && (
+        <a href={`${base}partitions/${chanson.data.pdf}`} class="btn pdf-link" target="_blank">📄 Partition PDF</a>
+      )}
+    </div>
+
+    <!-- View toggle + Transpose -->
+    <div class="controls">
+      <div class="view-toggle">
+        <button class="btn btn-accent" id="btn-public">Public</button>
+        <button class="btn" id="btn-musician">Musicien</button>
+      </div>
+      <div class="transpose-controls musician-only">
+        <button class="btn" id="transpose-down">−</button>
+        <span id="transpose-value">0</span>
+        <button class="btn" id="transpose-up">+</button>
+      </div>
+    </div>
+
+    <!-- Lyrics -->
+    <div class="lyrics card" id="lyrics-container">
+      <pre id="lyrics-raw" hidden>{file}</pre>
+      <div id="lyrics-rendered"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="song-nav">
+      {prev ? (
+        <a href={`${base}chanson/${prev.id}/`} class="btn nav-prev">← {prev.data.title}</a>
+      ) : <span />}
+      {next ? (
+        <a href={`${base}chanson/${next.id}/`} class="btn nav-next">{next.data.title} →</a>
+      ) : <span />}
+    </nav>
+  </div>
+</BaseLayout>
+
+<style>
+  .song-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .song-header {
+    text-align: center;
+  }
+
+  .back-link {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .song-header h1 {
+    margin-top: 0.5rem;
+    font-size: 1.8rem;
+  }
+
+  .song-artist {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+  }
+
+  /* Meta */
+  .song-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .meta-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .meta-value {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .pdf-link {
+    margin-left: auto;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .transpose-controls {
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .transpose-controls span {
+    min-width: 2rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  /* Lyrics */
+  .lyrics {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .lyrics :global(.chord) {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9em;
+    position: relative;
+    top: -0.1em;
+  }
+
+  .lyrics :global(.line) {
+    display: block;
+    min-height: 1.5em;
+  }
+
+  .lyrics :global(.section-refrain) {
+    border-left: 3px solid var(--accent);
+    padding-left: 0.75rem;
+    margin: 0.5rem 0;
+  }
+
+  /* Navigation */
+  .song-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .nav-prev, .nav-next {
+    max-width: 45%;
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Musician-only elements hidden by default */
+  .musician-only {
+    display: none;
+  }
+
+  :global(body.view-musician) .musician-only {
+    display: flex;
+  }
+</style>
+
+<script>
+  // === Notes & Transposition ===
+  const NOTES_SHARP = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const NOTES_FLAT  = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+  function noteIndex(note: string): number {
+    const n = note.replace('b', 'b');
+    let idx = NOTES_SHARP.indexOf(n);
+    if (idx === -1) idx = NOTES_FLAT.indexOf(n);
+    return idx;
+  }
+
+  function transposeChord(chord: string, semitones: number): string {
+    // Handle compound chords like A7sus4, F#m, Bbmaj7
+    const match = chord.match(/^([A-G][#b]?)(.*)/);
+    if (!match) return chord;
+    const [, root, suffix] = match;
+    const idx = noteIndex(root);
+    if (idx === -1) return chord;
+    const newIdx = ((idx + semitones) % 12 + 12) % 12;
+    // Use sharps if original had sharp, flats if had flat
+    const useFlat = root.includes('b');
+    const newRoot = useFlat ? NOTES_FLAT[newIdx] : NOTES_SHARP[newIdx];
+    return newRoot + suffix;
+  }
+
+  // === ChordPro Parser ===
+  function parseAndRender(raw: string, semitones: number, showChords: boolean): string {
+    const lines = raw.split('\n');
+    let html = '';
+    let inRefrain = false;
+
+    for (const line of lines) {
+      if (line.trim() === '{refrain}') {
+        inRefrain = true;
+        html += '<div class="section-refrain">';
+        continue;
+      }
+      if (line.trim() === '{/refrain}') {
+        inRefrain = false;
+        html += '</div>';
+        continue;
+      }
+      if (line.trim() === '') {
+        html += '<span class="line">&nbsp;</span>';
+        continue;
+      }
+
+      // Parse [Chord]lyrics
+      let lineHtml = '';
+      const regex = /\[([^\]]+)\]/g;
+      let lastIndex = 0;
+      let m;
+
+      while ((m = regex.exec(line)) !== null) {
+        // Text before chord
+        lineHtml += escapeHtml(line.slice(lastIndex, m.index));
+        if (showChords) {
+          const transposed = transposeChord(m[1], semitones);
+          lineHtml += `<span class="chord">${escapeHtml(transposed)}</span>`;
+        }
+        lastIndex = regex.lastIndex;
+      }
+      lineHtml += escapeHtml(line.slice(lastIndex));
+      html += `<span class="line">${lineHtml}</span>`;
+    }
+    return html;
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // === DOM Setup ===
+  const raw = document.getElementById('lyrics-raw')!.textContent || '';
+  const rendered = document.getElementById('lyrics-rendered')!;
+  const btnPublic = document.getElementById('btn-public')!;
+  const btnMusician = document.getElementById('btn-musician')!;
+  const transposeUp = document.getElementById('transpose-up')!;
+  const transposeDown = document.getElementById('transpose-down')!;
+  const transposeValue = document.getElementById('transpose-value')!;
+
+  let semitones = 0;
+
+  function isMusician(): boolean {
+    return document.body.classList.contains('view-musician');
+  }
+
+  function render() {
+    rendered.innerHTML = parseAndRender(raw, semitones, isMusician());
+    transposeValue.textContent = (semitones >= 0 ? '+' : '') + semitones;
+  }
+
+  function setView(view: string) {
+    if (view === 'musician') {
+      document.body.classList.add('view-musician');
+      btnMusician.classList.add('btn-accent');
+      btnPublic.classList.remove('btn-accent');
+    } else {
+      document.body.classList.remove('view-musician');
+      btnPublic.classList.add('btn-accent');
+      btnMusician.classList.remove('btn-accent');
+    }
+    localStorage.setItem('view', view);
+    render();
+  }
+
+  btnPublic.addEventListener('click', () => setView('public'));
+  btnMusician.addEventListener('click', () => setView('musician'));
+
+  transposeUp.addEventListener('click', () => {
+    semitones = (semitones + 1) % 12;
+    render();
+  });
+
+  transposeDown.addEventListener('click', () => {
+    semitones = ((semitones - 1) % 12 + 12) % 12;
+    render();
+  });
+
+  // Init
+  const saved = localStorage.getItem('view');
+  if (saved) setView(saved); else render();
+</script>

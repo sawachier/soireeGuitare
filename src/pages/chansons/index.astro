@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const chansons = await getCollection('chansons');
+const sorted = chansons.sort((a, b) => a.data.order - b.data.order);
+const base = import.meta.env.BASE_URL;
+
+const difficultyColor: Record<string, string> = {
+  facile: '#4ade80',
+  moyen: '#e8943a',
+  'avancé': '#f87171',
+};
+
+const tempoLabel: Record<string, string> = {
+  lent: '🐢 Lent',
+  moyen: '🚶 Moyen',
+  rapide: '🏃 Rapide',
+};
+---
+
+<BaseLayout title="Set-list">
+  <h1>🎵 Set-list</h1>
+  <p class="setlist-intro">L'ordre des chansons de la soirée. Clique sur un titre pour voir les paroles !</p>
+
+  <div class="view-toggle">
+    <button class="btn btn-accent" data-view="public" id="btn-public">Public</button>
+    <button class="btn" data-view="musician" id="btn-musician">Musicien</button>
+  </div>
+
+  <ol class="song-list">
+    {sorted.map((chanson) => (
+      <li class="card song-item">
+        <a href={`${base}chanson/${chanson.id}/`} class="song-link">
+          <div class="song-header">
+            <span class="song-order">{chanson.data.order}</span>
+            <div class="song-info">
+              <span class="song-title">{chanson.data.title}</span>
+              <span class="song-artist">{chanson.data.artist}</span>
+            </div>
+          </div>
+          <div class="song-meta musician-only">
+            <span class="badge" style={`color: ${difficultyColor[chanson.data.difficulty]}`}>{chanson.data.difficulty}</span>
+            <span class="badge">🎵 {chanson.data.key}</span>
+            {chanson.data.capo > 0 && <span class="badge">Capo {chanson.data.capo}</span>}
+            <span class="badge">{tempoLabel[chanson.data.tempo]}</span>
+          </div>
+        </a>
+        {chanson.data.pdf && (
+          <a href={`${base}partitions/${chanson.data.pdf}`} class="btn pdf-btn musician-only" target="_blank">
+            📄 PDF
+          </a>
+        )}
+      </li>
+    ))}
+  </ol>
+</BaseLayout>
+
+<style>
+  .setlist-intro {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .song-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .song-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.2s;
+  }
+
+  .song-item:hover {
+    border-color: var(--accent);
+  }
+
+  .song-link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: inherit;
+  }
+
+  .song-link:hover {
+    color: inherit;
+  }
+
+  .song-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .song-order {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .song-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .song-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .song-artist {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .song-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-left: 2.75rem;
+  }
+
+  .pdf-btn {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  /* Musician-only elements hidden by default (public view) */
+  .musician-only {
+    display: none;
+  }
+
+  :global(body.view-musician) .musician-only {
+    display: flex;
+  }
+</style>
+
+<script>
+  const btnPublic = document.getElementById('btn-public')!;
+  const btnMusician = document.getElementById('btn-musician')!;
+
+  function setView(view: string) {
+    if (view === 'musician') {
+      document.body.classList.add('view-musician');
+      btnMusician.classList.add('btn-accent');
+      btnPublic.classList.remove('btn-accent');
+    } else {
+      document.body.classList.remove('view-musician');
+      btnPublic.classList.add('btn-accent');
+      btnMusician.classList.remove('btn-accent');
+    }
+    localStorage.setItem('view', view);
+  }
+
+  btnPublic.addEventListener('click', () => setView('public'));
+  btnMusician.addEventListener('click', () => setView('musician'));
+
+  // Restore saved preference
+  const saved = localStorage.getItem('view');
+  if (saved) setView(saved);
+</script>
