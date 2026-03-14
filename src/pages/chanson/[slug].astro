@@ -77,6 +77,20 @@ const file = chanson.body ?? '';
       </div>
     </div>
 
+    <!-- Chord diagrams (musician view, collapsible) -->
+    <div class="chord-diagrams musician-only card" id="chord-diagrams">
+      <button class="chord-diagrams-toggle" id="chord-toggle" type="button">
+        <span class="meta-label">Accords utilisés</span>
+        <span class="chord-toggle-icon" id="chord-toggle-icon">▸</span>
+      </button>
+      <div class="chord-diagrams-grid" id="chord-grid" hidden></div>
+    </div>
+
+    <!-- Chord zoom overlay -->
+    <div class="chord-overlay" id="chord-overlay" hidden>
+      <div class="chord-overlay-content" id="chord-overlay-content"></div>
+    </div>
+
     <!-- Lyrics -->
     <div class="lyrics card" id="lyrics-container">
       <pre id="lyrics-raw" hidden>{file}</pre>
@@ -202,6 +216,7 @@ const file = chanson.body ?? '';
     line-height: 1.9;
     white-space: pre-wrap;
     overflow-x: auto;
+    padding-bottom: 4rem;
   }
 
   .lyrics :global(.chord-pair) {
@@ -259,6 +274,98 @@ const file = chanson.body ?? '';
     padding: 0.5rem 1rem;
     border-radius: 8px;
     letter-spacing: 0.02em;
+  }
+
+  /* Chord diagrams */
+  .chord-diagrams {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chord-diagrams-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    color: inherit;
+  }
+
+  .chord-toggle-icon {
+    color: var(--accent);
+    font-size: 0.85rem;
+    transition: transform 0.2s;
+  }
+
+  .chord-toggle-icon.open {
+    transform: rotate(90deg);
+  }
+
+  .chord-diagrams-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding-top: 0.5rem;
+  }
+
+  .chord-diagrams-grid[hidden] {
+    display: none;
+  }
+
+  .chord-diagrams :global(.chord-diagram) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .chord-diagrams :global(.chord-diagram:hover) {
+    background: var(--accent-glow);
+  }
+
+  .chord-diagrams :global(.chord-diagram-name) {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  /* Chord zoom overlay */
+  .chord-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .chord-overlay[hidden] {
+    display: none;
+  }
+
+  .chord-overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .chord-overlay-content :global(.chord-diagram-name) {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
   }
 
   /* Navigation */
@@ -375,6 +482,198 @@ const file = chanson.body ?? '';
     return newRoot + suffix;
   }
 
+  // === Chord Diagram Database ===
+  // Format: [frets] as string (x=mute, 0=open, 1-9=fret), barré fret (0=none)
+  // Standard tuning: E A D G B E
+  type ChordDef = { frets: string; baseFret: number; barres?: number[] };
+  const CHORD_DB: Record<string, ChordDef> = {
+    // Major
+    'C':    { frets: 'x32010', baseFret: 1 },
+    'D':    { frets: 'xx0232', baseFret: 1 },
+    'E':    { frets: '022100', baseFret: 1 },
+    'F':    { frets: '133211', baseFret: 1, barres: [1] },
+    'G':    { frets: '320003', baseFret: 1 },
+    'A':    { frets: 'x02220', baseFret: 1 },
+    'B':    { frets: 'x24442', baseFret: 1, barres: [2] },
+    'C#':   { frets: 'x46664', baseFret: 1, barres: [4] },
+    'Db':   { frets: 'x46664', baseFret: 1, barres: [4] },
+    'D#':   { frets: 'x68886', baseFret: 1, barres: [6] },
+    'Eb':   { frets: 'x68886', baseFret: 1, barres: [6] },
+    'F#':   { frets: '244322', baseFret: 1, barres: [2] },
+    'Gb':   { frets: '244322', baseFret: 1, barres: [2] },
+    'G#':   { frets: '466544', baseFret: 1, barres: [4] },
+    'Ab':   { frets: '466544', baseFret: 1, barres: [4] },
+    'A#':   { frets: 'x13331', baseFret: 1, barres: [1] },
+    'Bb':   { frets: 'x13331', baseFret: 1, barres: [1] },
+    // Minor
+    'Am':   { frets: 'x02210', baseFret: 1 },
+    'Bm':   { frets: 'x24432', baseFret: 1, barres: [2] },
+    'Cm':   { frets: 'x35543', baseFret: 1, barres: [3] },
+    'Dm':   { frets: 'xx0231', baseFret: 1 },
+    'Em':   { frets: '022000', baseFret: 1 },
+    'Fm':   { frets: '133111', baseFret: 1, barres: [1] },
+    'Gm':   { frets: '355333', baseFret: 1, barres: [3] },
+    'F#m':  { frets: '244222', baseFret: 1, barres: [2] },
+    'Gbm':  { frets: '244222', baseFret: 1, barres: [2] },
+    'G#m':  { frets: '466444', baseFret: 1, barres: [4] },
+    'Abm':  { frets: '466444', baseFret: 1, barres: [4] },
+    'A#m':  { frets: 'x13321', baseFret: 1, barres: [1] },
+    'Bbm':  { frets: 'x13321', baseFret: 1, barres: [1] },
+    'C#m':  { frets: 'x46654', baseFret: 1, barres: [4] },
+    'Dbm':  { frets: 'x46654', baseFret: 1, barres: [4] },
+    'D#m':  { frets: 'x68876', baseFret: 1, barres: [6] },
+    'Ebm':  { frets: 'x68876', baseFret: 1, barres: [6] },
+    // 7th
+    'A7':   { frets: 'x02020', baseFret: 1 },
+    'B7':   { frets: 'x21202', baseFret: 1 },
+    'C7':   { frets: 'x32310', baseFret: 1 },
+    'D7':   { frets: 'xx0212', baseFret: 1 },
+    'E7':   { frets: '020100', baseFret: 1 },
+    'F7':   { frets: '131211', baseFret: 1, barres: [1] },
+    'G7':   { frets: '320001', baseFret: 1 },
+    // sus4
+    'Asus4':   { frets: 'x02230', baseFret: 1 },
+    'Dsus4':   { frets: 'xx0233', baseFret: 1 },
+    'Esus4':   { frets: '022200', baseFret: 1 },
+    // 7sus4
+    'A7sus4':  { frets: 'x02030', baseFret: 1 },
+    'D7sus4':  { frets: 'xx0213', baseFret: 1 },
+    // Minor 7
+    'Am7':  { frets: 'x02010', baseFret: 1 },
+    'Bm7':  { frets: 'x20202', baseFret: 1 },
+    'Dm7':  { frets: 'xx0211', baseFret: 1 },
+    'Em7':  { frets: '022030', baseFret: 1 },
+    'Fm7':  { frets: '131111', baseFret: 1, barres: [1] },
+    'Gm7':  { frets: '353333', baseFret: 1, barres: [3] },
+    'F#m7': { frets: '242222', baseFret: 1, barres: [2] },
+    'C#m7': { frets: 'x46454', baseFret: 1, barres: [4] },
+  };
+
+  // Normalize chord name for DB lookup: try full name, then simplify
+  function lookupChord(name: string): ChordDef | null {
+    if (CHORD_DB[name]) return CHORD_DB[name];
+    // Try common equivalences: e.g., Am7sus4 → look for Am7, then Am
+    const m = name.match(/^([A-G][#b]?)(m?)(.*)$/);
+    if (!m) return null;
+    const [, root, minor, ext] = m;
+    // Try root+minor+ext, root+minor+simplified ext, root+minor
+    const tryNames = [root + minor + ext, root + minor];
+    for (const n of tryNames) {
+      if (CHORD_DB[n]) return CHORD_DB[n];
+    }
+    return null;
+  }
+
+  // Extract unique chords from raw song text
+  function extractChords(raw: string, semitones: number): string[] {
+    const chordRegex = /\[([^\]]+)\]/g;
+    const seen = new Set<string>();
+    const ordered: string[] = [];
+    let m;
+    while ((m = chordRegex.exec(raw)) !== null) {
+      const transposed = transposeChord(m[1], semitones);
+      if (!seen.has(transposed)) {
+        seen.add(transposed);
+        ordered.push(transposed);
+      }
+    }
+    return ordered;
+  }
+
+  // SVG chord diagram renderer
+  function renderChordSVG(name: string, def: ChordDef, scale: number = 1): string {
+    const W = 64 * scale, H = 80 * scale;
+    const pad = { top: 6 * scale, left: 14 * scale, right: 6 * scale, bottom: 3 * scale };
+    const strings = 6;
+    const frets = 4;
+    const sw = (W - pad.left - pad.right) / (strings - 1);
+    const fh = (H - pad.top - pad.bottom) / frets;
+    const x = (s: number) => pad.left + s * sw;
+    const y = (f: number) => pad.top + f * fh;
+
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
+
+    // Nut (thick bar at top if baseFret=1)
+    if (def.baseFret === 1) {
+      svg += `<rect x="${pad.left - 1 * scale}" y="${pad.top - 2 * scale}" width="${(strings - 1) * sw + 2 * scale}" height="${3 * scale}" fill="#f5e6d0" rx="${1 * scale}"/>`;
+    }
+
+    // Fret lines
+    for (let f = 0; f <= frets; f++) {
+      svg += `<line x1="${x(0)}" y1="${y(f)}" x2="${x(strings - 1)}" y2="${y(f)}" stroke="#6b5a42" stroke-width="${0.8 * scale}"/>`;
+    }
+    // String lines
+    for (let s = 0; s < strings; s++) {
+      svg += `<line x1="${x(s)}" y1="${y(0)}" x2="${x(s)}" y2="${y(frets)}" stroke="#6b5a42" stroke-width="${0.6 * scale}"/>`;
+    }
+
+    // Barré
+    if (def.barres) {
+      for (const bFret of def.barres) {
+        const relFret = bFret - def.baseFret + 1;
+        if (relFret >= 1 && relFret <= frets) {
+          // Find first and last string pressed at this fret
+          let first = -1, last = -1;
+          for (let s = 0; s < 6; s++) {
+            const f = def.frets[s];
+            if (f !== 'x' && parseInt(f) === bFret) {
+              if (first === -1) first = s;
+              last = s;
+            }
+          }
+          if (first !== -1 && last !== first) {
+            const cy = y(relFret) - fh / 2;
+            svg += `<rect x="${x(first) - 3 * scale}" y="${cy - 4 * scale}" width="${(last - first) * sw + 6 * scale}" height="${8 * scale}" rx="${4 * scale}" fill="#e8943a"/>`;
+          }
+        }
+      }
+    }
+
+    // Dots
+    for (let s = 0; s < strings; s++) {
+      const ch = def.frets[s];
+      if (ch === 'x') {
+        svg += `<text x="${x(s)}" y="${pad.top - 5 * scale}" text-anchor="middle" fill="#c4a882" font-size="${9 * scale}" font-family="sans-serif">×</text>`;
+      } else if (ch === '0') {
+        svg += `<circle cx="${x(s)}" cy="${pad.top - 6 * scale}" r="${3 * scale}" fill="none" stroke="#c4a882" stroke-width="${1 * scale}"/>`;
+      } else {
+        const fretNum = parseInt(ch);
+        const relFret = fretNum - def.baseFret + 1;
+        if (relFret >= 1 && relFret <= frets) {
+          const cy = y(relFret) - fh / 2;
+          // Skip dot if part of barré (except first occurrence)
+          const isBarré = def.barres?.includes(fretNum);
+          if (!isBarré) {
+            svg += `<circle cx="${x(s)}" cy="${cy}" r="${4 * scale}" fill="#e8943a"/>`;
+          }
+        }
+      }
+    }
+
+    // Base fret indicator
+    if (def.baseFret > 1) {
+      svg += `<text x="${pad.left - 7 * scale}" y="${y(0) + fh / 2 + 3 * scale}" text-anchor="middle" fill="#c4a882" font-size="${8 * scale}" font-family="sans-serif">${def.baseFret}</text>`;
+    }
+
+    svg += '</svg>';
+    return svg;
+  }
+
+  function renderChordDiagrams(semitones: number) {
+    const grid = document.getElementById('chord-grid')!;
+    const chords = extractChords(raw, semitones);
+    let html = '';
+    for (const chord of chords) {
+      const def = lookupChord(chord);
+      if (def) {
+        html += `<div class="chord-diagram"><span class="chord-diagram-name">${escapeHtml(chord)}</span>${renderChordSVG(chord, def)}</div>`;
+      } else {
+        html += `<div class="chord-diagram"><span class="chord-diagram-name">${escapeHtml(chord)}</span><span style="font-size:0.65rem;color:var(--text-secondary);">?</span></div>`;
+      }
+    }
+    grid.innerHTML = html;
+  }
+
   // === ChordPro Parser ===
   function parseAndRender(raw: string, semitones: number, showChords: boolean): string {
     const lines = raw.split('\n');
@@ -442,7 +741,10 @@ const file = chanson.body ?? '';
           lastIndex = regex.lastIndex;
         }
         lineHtml += escapeHtml(line.slice(lastIndex));
-        html += `<span class="line">${lineHtml}</span>`;
+        // Skip lines that become empty after stripping chords (e.g. instrumental lines)
+        if (lineHtml.trim()) {
+          html += `<span class="line">${lineHtml}</span>`;
+        }
       }
     }
     return html;
@@ -474,6 +776,8 @@ const file = chanson.body ?? '';
     transposeValue.textContent = (semitones >= 0 ? '+' : '') + semitones;
     // Update displayed key with transposition
     currentKeyEl.textContent = transposeChord(originalKey, semitones);
+    // Update chord diagrams
+    renderChordDiagrams(semitones);
   }
 
   function setView(view: string) {
@@ -506,6 +810,43 @@ const file = chanson.body ?? '';
   // Init
   const saved = localStorage.getItem('view');
   if (saved) setView(saved); else render();
+
+  // === Chord diagrams toggle ===
+  const chordToggle = document.getElementById('chord-toggle')!;
+  const chordGrid = document.getElementById('chord-grid')!;
+  const chordToggleIcon = document.getElementById('chord-toggle-icon')!;
+
+  chordToggle.addEventListener('click', () => {
+    const isOpen = !chordGrid.hidden;
+    chordGrid.hidden = isOpen;
+    chordToggleIcon.classList.toggle('open', !isOpen);
+    localStorage.setItem('chordsOpen', isOpen ? '' : '1');
+  });
+
+  // Restore chord panel state
+  if (localStorage.getItem('chordsOpen') === '1') {
+    chordGrid.hidden = false;
+    chordToggleIcon.classList.add('open');
+  }
+
+  // === Chord zoom on click ===
+  const chordOverlay = document.getElementById('chord-overlay')!;
+  const chordOverlayContent = document.getElementById('chord-overlay-content')!;
+
+  chordGrid.addEventListener('click', (e) => {
+    const diagram = (e.target as HTMLElement).closest('.chord-diagram');
+    if (!diagram) return;
+    const name = diagram.querySelector('.chord-diagram-name')?.textContent || '';
+    const def = lookupChord(name);
+    if (!def) return;
+    chordOverlayContent.innerHTML =
+      `<span class="chord-diagram-name">${escapeHtml(name)}</span>${renderChordSVG(name, def, 3.5)}`;
+    chordOverlay.hidden = false;
+  });
+
+  chordOverlay.addEventListener('click', () => {
+    chordOverlay.hidden = true;
+  });
 
   // === Auto-scroll ===
   const scrollBtn = document.getElementById('autoscroll-btn')!;
