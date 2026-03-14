@@ -474,14 +474,31 @@ const file = chanson.body ?? '';
   let speedIndex = 1;
   let scrolling = false;
   let scrollRAF: number | null = null;
+  let lastScrollTime: number | null = null;
+  let accumulatedPx = 0;
+
+  // Base rate: speed * 48 px/s (equivalent to old speed * 0.8 px/frame at 60fps)
+  const BASE_PX_PER_SEC = 48;
 
   function updateSpeedLabel() {
     speedLabel.textContent = SPEEDS[speedIndex] + 'x';
   }
 
-  function autoScroll() {
+  function autoScroll(timestamp: number) {
     if (!scrolling) return;
-    window.scrollBy(0, SPEEDS[speedIndex] * 0.8);
+
+    if (lastScrollTime !== null) {
+      const elapsed = timestamp - lastScrollTime;
+      accumulatedPx += SPEEDS[speedIndex] * BASE_PX_PER_SEC * elapsed / 1000;
+
+      if (accumulatedPx >= 1) {
+        const px = Math.floor(accumulatedPx);
+        window.scrollTo(0, window.scrollY + px);
+        accumulatedPx -= px;
+      }
+    }
+
+    lastScrollTime = timestamp;
     scrollRAF = requestAnimationFrame(autoScroll);
   }
 
@@ -491,6 +508,8 @@ const file = chanson.body ?? '';
       scrollBtn.classList.add('active');
       scrollIcon.textContent = '⏸';
       speedPanel.hidden = false;
+      lastScrollTime = null;
+      accumulatedPx = 0;
       scrollRAF = requestAnimationFrame(autoScroll);
     } else {
       scrollBtn.classList.remove('active');
