@@ -8,6 +8,8 @@ const chansons = defineCollection({
     artist: z.string(),
     key: z.string(),
     capo: z.number().default(0),
+    bpm: z.number().optional(),
+    timeSig: z.string().default('4/4'),
     tempo: z.enum(['lent', 'moyen', 'rapide']).default('moyen'),
     difficulty: z.enum(['facile', 'moyen', 'avancé']).default('moyen'),
     order: z.number(),

@@ -32,21 +32,28 @@ const file = chanson.body ?? '';
       <p class="song-artist">{chanson.data.artist}</p>
     </div>
 
+    <!-- Capo banner (always visible in musician mode) -->
+    {chanson.data.capo > 0 && (
+      <div class="capo-banner musician-only">
+        ⚠️ Capo fret {chanson.data.capo}
+      </div>
+    )}
+
     <!-- Metadata (musician view) -->
     <div class="song-meta musician-only card">
       <div class="meta-item">
         <span class="meta-label">Tonalité</span>
         <span class="meta-value" id="current-key">{chanson.data.key}</span>
       </div>
-      {chanson.data.capo > 0 && (
+      {chanson.data.bpm && (
         <div class="meta-item">
-          <span class="meta-label">Capo</span>
-          <span class="meta-value">Fret {chanson.data.capo}</span>
+          <span class="meta-label">BPM</span>
+          <span class="meta-value">{chanson.data.bpm}</span>
         </div>
       )}
       <div class="meta-item">
-        <span class="meta-label">Tempo</span>
-        <span class="meta-value">{chanson.data.tempo}</span>
+        <span class="meta-label">Mesure</span>
+        <span class="meta-value">{chanson.data.timeSig}</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Difficulté</span>
@@ -73,6 +80,7 @@ const file = chanson.body ?? '';
     <!-- Lyrics -->
     <div class="lyrics card" id="lyrics-container">
       <pre id="lyrics-raw" hidden>{file}</pre>
+      <pre id="original-key" hidden>{chanson.data.key}</pre>
       <div id="lyrics-rendered"></div>
     </div>
 
@@ -226,6 +234,33 @@ const file = chanson.body ?? '';
     margin: 0.5rem 0;
   }
 
+  .lyrics :global(.section-label) {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin: 1rem 0 0.3rem;
+    width: fit-content;
+  }
+
+  /* Capo banner */
+  .capo-banner {
+    background: #b45309;
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+  }
+
   /* Navigation */
   .song-nav {
     display: flex;
@@ -346,8 +381,14 @@ const file = chanson.body ?? '';
     let html = '';
 
     for (const line of lines) {
+      // Section markers: {section Intro}, {section Couplet 1}, etc.
+      const sectionMatch = line.trim().match(/^\{section\s+(.+)\}$/);
+      if (sectionMatch) {
+        html += `<span class="section-label">${escapeHtml(sectionMatch[1])}</span>`;
+        continue;
+      }
       if (line.trim() === '{refrain}') {
-        html += '<div class="section-refrain">';
+        html += '<span class="section-label">Refrain</span><div class="section-refrain">';
         continue;
       }
       if (line.trim() === '{/refrain}') {
@@ -413,12 +454,14 @@ const file = chanson.body ?? '';
 
   // === DOM Setup ===
   const raw = document.getElementById('lyrics-raw')!.textContent || '';
+  const originalKey = document.getElementById('original-key')!.textContent || '';
   const rendered = document.getElementById('lyrics-rendered')!;
   const btnPublic = document.getElementById('btn-public')!;
   const btnMusician = document.getElementById('btn-musician')!;
   const transposeUp = document.getElementById('transpose-up')!;
   const transposeDown = document.getElementById('transpose-down')!;
   const transposeValue = document.getElementById('transpose-value')!;
+  const currentKeyEl = document.getElementById('current-key')!;
 
   let semitones = 0;
 
@@ -429,6 +472,8 @@ const file = chanson.body ?? '';
   function render() {
     rendered.innerHTML = parseAndRender(raw, semitones, isMusician());
     transposeValue.textContent = (semitones >= 0 ? '+' : '') + semitones;
+    // Update displayed key with transposition
+    currentKeyEl.textContent = transposeChord(originalKey, semitones);
   }
 
   function setView(view: string) {
@@ -546,5 +591,28 @@ const file = chanson.body ?? '';
   speedDown.addEventListener('click', () => {
     if (speedIndex > 0) speedIndex--;
     updateSpeedLabel();
+  });
+
+  // === Wake Lock (keep screen on) ===
+  let wakeLock: WakeLockSentinel | null = null;
+
+  async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => { wakeLock = null; });
+      } catch (_) { /* silently fail on unsupported/denied */ }
+    }
+  }
+
+  function releaseWakeLock() {
+    wakeLock?.release();
+    wakeLock = null;
+  }
+
+  // Request wake lock on page load, re-acquire on visibility change
+  requestWakeLock();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') requestWakeLock();
   });
 </script>

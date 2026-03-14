@@ -11,12 +11,6 @@ const difficultyColor: Record<string, string> = {
   moyen: '#e8943a',
   'avancé': '#f87171',
 };
-
-const tempoLabel: Record<string, string> = {
-  lent: '🐢 Lent',
-  moyen: '🚶 Moyen',
-  rapide: '🏃 Rapide',
-};
 ---
 
 <BaseLayout title="Set-list">
@@ -42,8 +36,9 @@ const tempoLabel: Record<string, string> = {
           <div class="song-meta musician-only">
             <span class="badge" style={`color: ${difficultyColor[chanson.data.difficulty]}`}>{chanson.data.difficulty}</span>
             <span class="badge">🎵 {chanson.data.key}</span>
-            {chanson.data.capo > 0 && <span class="badge">Capo {chanson.data.capo}</span>}
-            <span class="badge">{tempoLabel[chanson.data.tempo]}</span>
+            {chanson.data.capo > 0 && <span class="badge capo-badge">Capo {chanson.data.capo}</span>}
+            {chanson.data.bpm && <span class="badge">♩ {chanson.data.bpm} bpm</span>}
+            <span class="badge">{chanson.data.timeSig}</span>
           </div>
         </a>
         {chanson.data.pdf && (
@@ -153,6 +148,12 @@ const tempoLabel: Record<string, string> = {
 
   :global(body.view-musician) .musician-only {
     display: flex;
+  }
+
+  .capo-badge {
+    background: #b45309;
+    color: #fff;
+    font-weight: 700;
   }
 </style>
 
