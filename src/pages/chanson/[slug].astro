@@ -493,7 +493,9 @@ const file = chanson.body ?? '';
 
       if (accumulatedPx >= 1) {
         const px = Math.floor(accumulatedPx);
-        window.scrollTo(0, window.scrollY + px);
+        const target = (document.documentElement.scrollTop || document.body.scrollTop) + px;
+        document.documentElement.scrollTop = target;
+        document.body.scrollTop = target;
         accumulatedPx -= px;
       }
     }
@@ -505,6 +507,7 @@ const file = chanson.body ?? '';
   scrollBtn.addEventListener('click', () => {
     scrolling = !scrolling;
     if (scrolling) {
+      document.documentElement.classList.add('autoscrolling');
       scrollBtn.classList.add('active');
       scrollIcon.textContent = '⏸';
       speedPanel.hidden = false;
@@ -512,6 +515,7 @@ const file = chanson.body ?? '';
       accumulatedPx = 0;
       scrollRAF = requestAnimationFrame(autoScroll);
     } else {
+      document.documentElement.classList.remove('autoscrolling');
       scrollBtn.classList.remove('active');
       scrollIcon.textContent = '▶';
       speedPanel.hidden = true;
