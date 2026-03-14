@@ -475,13 +475,21 @@ const file = chanson.body ?? '';
   let scrolling = false;
   let scrollRAF: number | null = null;
   let lastScrollTime: number | null = null;
-  let accumulatedPx = 0;
+  let targetScrollY = 0;
 
-  // Base rate: speed * 48 px/s (equivalent to old speed * 0.8 px/frame at 60fps)
   const BASE_PX_PER_SEC = 48;
 
   function updateSpeedLabel() {
     speedLabel.textContent = SPEEDS[speedIndex] + 'x';
+  }
+
+  function stopScrolling() {
+    scrolling = false;
+    document.documentElement.classList.remove('autoscrolling');
+    scrollBtn.classList.remove('active');
+    scrollIcon.textContent = '▶';
+    speedPanel.hidden = true;
+    if (scrollRAF) cancelAnimationFrame(scrollRAF);
   }
 
   function autoScroll(timestamp: number) {
@@ -489,15 +497,18 @@ const file = chanson.body ?? '';
 
     if (lastScrollTime !== null) {
       const elapsed = timestamp - lastScrollTime;
-      accumulatedPx += SPEEDS[speedIndex] * BASE_PX_PER_SEC * elapsed / 1000;
+      targetScrollY += SPEEDS[speedIndex] * BASE_PX_PER_SEC * elapsed / 1000;
 
-      if (accumulatedPx >= 1) {
-        const px = Math.floor(accumulatedPx);
-        const target = (document.documentElement.scrollTop || document.body.scrollTop) + px;
-        document.documentElement.scrollTop = target;
-        document.body.scrollTop = target;
-        accumulatedPx -= px;
+      // Stop at bottom of page
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (targetScrollY >= maxScroll) {
+        targetScrollY = maxScroll;
+        window.scrollTo(0, targetScrollY);
+        stopScrolling();
+        return;
       }
+
+      window.scrollTo(0, Math.round(targetScrollY));
     }
 
     lastScrollTime = timestamp;
@@ -505,23 +516,27 @@ const file = chanson.body ?? '';
   }
 
   scrollBtn.addEventListener('click', () => {
-    scrolling = !scrolling;
     if (scrolling) {
+      stopScrolling();
+    } else {
+      scrolling = true;
       document.documentElement.classList.add('autoscrolling');
       scrollBtn.classList.add('active');
       scrollIcon.textContent = '⏸';
       speedPanel.hidden = false;
       lastScrollTime = null;
-      accumulatedPx = 0;
+      targetScrollY = window.scrollY;
       scrollRAF = requestAnimationFrame(autoScroll);
-    } else {
-      document.documentElement.classList.remove('autoscrolling');
-      scrollBtn.classList.remove('active');
-      scrollIcon.textContent = '▶';
-      speedPanel.hidden = true;
-      if (scrollRAF) cancelAnimationFrame(scrollRAF);
     }
   });
+
+  // Stop auto-scroll when user touches the screen (mobile)
+  document.addEventListener('touchstart', (e) => {
+    if (!scrolling) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('#autoscroll-btn, #autoscroll-speed')) return;
+    stopScrolling();
+  }, { passive: true });
 
   speedUp.addEventListener('click', () => {
     if (speedIndex < SPEEDS.length - 1) speedIndex++;
