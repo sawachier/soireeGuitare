@@ -30,6 +30,9 @@ const file = chanson.body ?? '';
       <a href={`${base}chansons/`} class="back-link">← Set-list</a>
       <h1>{chanson.data.title}</h1>
       <p class="song-artist">{chanson.data.artist}</p>
+      {chanson.data.pdf && (
+        <a href={`${base}partitions/${chanson.data.pdf}`} class="btn pdf-link public-only" target="_blank">📄 PDF paroles</a>
+      )}
     </div>
 
     <!-- Capo banner (always visible in musician mode) -->
@@ -59,9 +62,6 @@ const file = chanson.body ?? '';
         <span class="meta-label">Difficulté</span>
         <span class="meta-value">{chanson.data.difficulty}</span>
       </div>
-      {chanson.data.pdf && (
-        <a href={`${base}partitions/${chanson.data.pdf}`} class="btn pdf-link" target="_blank">📄 Partition PDF</a>
-      )}
     </div>
 
     <!-- View toggle + Transpose -->
@@ -179,7 +179,13 @@ const file = chanson.body ?? '';
   }
 
   .pdf-link {
-    margin-left: auto;
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  :global(body.view-musician) .public-only {
+    display: none !important;
   }
 
   /* Controls */

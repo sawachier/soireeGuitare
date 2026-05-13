@@ -41,11 +41,7 @@ const difficultyColor: Record<string, string> = {
             <span class="badge">{chanson.data.timeSig}</span>
           </div>
         </a>
-        {chanson.data.pdf && (
-          <a href={`${base}partitions/${chanson.data.pdf}`} class="btn pdf-btn musician-only" target="_blank">
-            📄 PDF
-          </a>
-        )}
+
       </li>
     ))}
   </ol>
@@ -148,6 +144,10 @@ const difficultyColor: Record<string, string> = {
 
   :global(body.view-musician) .musician-only {
     display: flex;
+  }
+
+  :global(body.view-musician) .public-only {
+    display: none !important;
   }
 
   .capo-badge {
