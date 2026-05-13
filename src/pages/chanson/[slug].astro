@@ -27,7 +27,15 @@ const file = chanson.body ?? '';
   <div class="song-page">
     <!-- Header -->
     <div class="song-header">
-      <a href={`${base}chansons/`} class="back-link">← Set-list</a>
+      <nav class="song-nav-top">
+        {prev ? (
+          <a href={`${base}chanson/${prev.id}/`} class="nav-top-link" title={prev.data.title}>← Précédent</a>
+        ) : <span />}
+        <a href={`${base}chansons/`} class="back-link">Set-list</a>
+        {next ? (
+          <a href={`${base}chanson/${next.id}/`} class="nav-top-link" title={next.data.title}>Suivant →</a>
+        ) : <span />}
+      </nav>
       <h1>{chanson.data.title}</h1>
       <p class="song-artist">{chanson.data.artist}</p>
       {chanson.data.pdf && (
@@ -129,6 +137,22 @@ const file = chanson.body ?? '';
 
   .song-header {
     text-align: center;
+  }
+
+  .song-nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-top-link {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .nav-top-link:hover {
+    color: var(--accent);
   }
 
   .back-link {
