@@ -11,58 +11,62 @@ order: 9
 pdf: "la-seine.pdf"
 ---
 
+{section Intro}
+[Em]   [Em]   [Em]   [Em]
+[Em]   [Em]   [Em]   [Em]
+
 {section Couplet 1}
-[Dm]Elle sort de son lit
-[Bb]Tellement sûre d'elle
-La [F]Seine, la [A7]Seine, la [Dm]Seine.
-[Dm]Tellement jolie,
-[Bb]Elle m'ensorcelle
-La [F]Seine, la [A7]Seine, la [Dm]Seine.
-[Dm]Extralucide
-[Bb]La lune est sur
-La [F]Seine, la [A7]Seine, la [Dm]Seine.
-[Dm]Tu n'es pas saoul
-[Bb]Paris est sous
-La [F]Seine, la [A7]Seine, la [Dm]Seine.
+[Em]Elle sort de son [Em]lit
+[C]Tellement sûre [C]d'elle
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
+[Em]Tellement jo[Em]lie,
+[C]Elle m'enso[C]rcelle
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
+[Em]Extralu[Em]cide
+[C]La lune est[C] sur
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
+[Em]Tu n'es pas sa[Em]oul
+[C]Paris est [C]sous
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
 
 {refrain}
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
 {/refrain}
 
 {section Couplet 2}
-[Dm]Extra lucide
-[Bb]Quand tu es sur
-La [F]Seine, la [A7]Seine, la [Dm]Seine
-[Dm]Extravagante
-[Bb]Quand l'ange est sur
-La [F]Seine, la [A7]Seine, la [Dm]Seine.
+[Em]Extra lucide  [Em]
+[C]Quand tu es sur[C]
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
+[Em]Extravagante  [Em]
+[C]Quand l'ange es[C]t sur
+[G]La Seine, [B7]la Seine, [Em]la Seine.[Em]
 
 {refrain}
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
 {/refrain}
 
-{section Couplet 3}
-[Gm]Sur le pont des arts [C]mon coeur vacille
-[F]Entre deux [Bbmaj7]eaux, [Gm]l'air est si bon
-[C]Cet air si pur, je le respire
-Nos reflets perchés sur ce pont
-[D]
+{section Pont}
+[E]Sur le pont des arts[Am] mon [B7]coeur vacille
+[C]Entre deux eaux[D], l'air est si b[E]on
+[E]Cet air si pur[Am], je le [B7]respire
+[Cmaj7]Nos reflets perchés sur ce pont
+
 
 {refrain}
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
-[Bb]Je ne sais, ne sais, ne sais pas pour[F]quoi
-On s'aime comme [A7]ça...
-La Seine et [Dm]moi
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
+Je ne s[Em]ais, ne s[Em]ais, ne sais [C]pas pour[C]quoi
+On s'aime comme [G]ça...[B7]
+La Seine et [Em]moi  [Em]
 {/refrain}

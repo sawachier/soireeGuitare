@@ -11,58 +11,87 @@ order: 7
 pdf: "l-amour-a-la-machine.pdf"
 ---
 
+{intro}
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+
 {refrain}
-[Bm]Passez notre amour [A]à la ma[Bm]chine[A],
-Faites le [Bm]bouillir[A],
-Pour [Bm]voir si les [A]couleurs d'ori[Bm]gine[A],
-Peuvent reve[Bm]nir[A],
-Est-ce [Bm]qu'on peut ravoir [A]à l'eau de Ja[Bm]vel[A],
-Des senti[Bm]ments[A],
-La [Bm]blancheur qu'on [A]croyait éter[Bm]nelle[A],
-A[Bm]vant ?[A]
+Pas[Em]sez notre amour [D]à la mach[Em]ine,[D]
+Faites [Em]le bouillir[D],
+Pour [Em]voir si les cou[D]leurs d'orig[Em]ine[D],
+Peuvent reve[Em]nir,[D]
+Est-ce [Em]qu'on peut ravoir [D]à l'eau de Ja[Em]vel,[D]
+Des senti[Em]ments,[D]
+La [Em]blancheur qu'on cro[D]yait éter[Em]nelle,[D]
+A[Bm]vant ?[D]
 {/refrain}
 
 {section Couplet 1}
-Pour [G]retrouver le rose ini[D]tial,
-De ta [Bm]joue [G]devenue [D]pâle,
-Le [G]bleu de nos baisers du dé[D]but,
-Tant d'[Bm]azur [G]per[D]du.[A]
+Pour [C]retrouver le rose ini[G]tial,
+De ta [Em]joue deve[C]nue [G]pâle,
+Le [C]bleu de nos baisers du dé[G]but,
+Tant d'[Em]azur [C]per[G]du.[D]
 
 {refrain}
-[Bm]Passez notre amour [A]à la ma[Bm]chine[A],
-Faites le [Bm]bouillir[A],
-Pour [Bm]voir si les [A]couleurs d'ori[Bm]gine[A],
-Peuvent reve[Bm]nir[A],
-Est-ce [Bm]qu'on peut ravoir [A]à l'eau de Ja[Bm]vel[A],
-Des senti[Bm]ments[A],
-La [Bm]blancheur qu'on [A]croyait éter[Bm]nelle[A],
-A[Bm]vant ?[A]
+Pas[Em]sez notre amour [D]à la mach[Em]ine,[D]
+Faites [Em]le bouillir[D],
+Pour [Em]voir si les cou[D]leurs d'orig[Em]ine[D],
+Peuvent reve[Em]nir,[D]
+Est-ce [Em]qu'on peut ravoir [D]à l'eau de Ja[Em]vel,[D]
+Des senti[Em]ments,[D]
+La [Em]blancheur qu'on cro[D]yait éter[Em]nelle,[D]
+A[Bm]vant ?[D]
 {/refrain}
 
 {section Couplet 2}
-[G]Matisse l'amour c'est bleu diffi[D]cile,
-Les [Bm]caresses rouges[G] fra[D]giles,
-Le [G]soleil de la vie les ta[D]basse,
-Et [Bm]alors, [G]elles [D]passent, [A]
+[C]Matisse l'amour c'est bleu diffi[G]cile,
+Les [Em]caresses rouges[C] fra[G]giles,
+Le [C]soleil de la vie les ta[G]basse,
+Et [Em]alors, [C]elles [G]passent, [D]
 
-Al[Bm]lez, [A]à la ma[Bm]chine ![A]
+{section pont}
+Al[Em]lez, [D]à la ma[Em]chine ![D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
 
 {section Couplet 3}
-Le [G]rouge pour faire tomber la mi[D]sère,
-De nos [Bm]gentils petits [G]grands-[D]pères,
-[G]Noires, les mains dans les bouches [D]blondes,
-Tout au[Bm]tour [G]du [D]monde.[A]
+Le [C]rouge pour faire tomber la mi[G]sère,
+De nos [Em]gentils petits [C]grands-[G]pères,
+[C]Noires, les mains dans les bouches [G]blondes,
+Tout au[Em]tour [C]du [G]monde.[D]
 
 {refrain}
-[Bm]Passez notre amour [A]à la ma[Bm]chine[A],
-Faites le [Bm]bouillir[A],
-Pour [Bm]voir si les [A]couleurs d'ori[Bm]gine[A],
-Peuvent reve[Bm]nir[A],
-Est-ce [Bm]qu'on peut ravoir [A]à l'eau de Ja[Bm]vel[A],
-Des senti[Bm]ments[A],
-La [Bm]blancheur qu'on [A]croyait éter[Bm]nelle[A],
-A[Bm]vant ?[A]
+Pas[Em]sez notre amour [D]à la mach[Em]ine,[D]
+Faites [Em]le bouillir[D],
+Pour [Em]voir si les cou[D]leurs d'orig[Em]ine[D],
+Peuvent reve[Em]nir,[D]
+Est-ce [Em]qu'on peut ravoir [D]à l'eau de Ja[Em]vel,[D]
+Des senti[Em]ments,[D]
+La [Em]blancheur qu'on cro[D]yait éter[Em]nelle,[D]
+A[Bm]vant ?[D]
 {/refrain}
 
 {section Outro}
-Al[Bm]lez, [A]à la ma[Bm]chine ![A]
+Al[Em]lez, [D]à la machine [Em]![D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]
+[Em]   [D]

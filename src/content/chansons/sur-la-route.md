@@ -2,7 +2,7 @@
 title: "Sur la route"
 artist: "Gérald de Palmas"
 key: "B"
-capo: 0
+capo: 2
 bpm: 76
 timeSig: "4/4"
 tempo: "lent"
@@ -12,47 +12,47 @@ pdf: "sur-la-route.pdf"
 ---
 
 {section Couplet 1}
-[B]Entre toute autre [B]chose
-[B]J'aurais dû m'arrêter [F#]faire une [E]pause
-[B]Mais j'étais trop pres[B]sé
-[B]N'aurait-on pas pu [F#]attendre un é[E]té
-[E]Erreur fa[F#]tale
-[B]J'aurais dû t'écou[A]ter [E] [B] [E]
-Je n'dissociais plus [F#]l'bien du mal
+[A]Entre toute autre [A]chose
+[A]J'aurais dû m'arrêter fair[E]e une pause   [D]
+[A]Mais j'étais trop press[A]é
+[A]N'aurait-on pas pu att[E]endre un é[D]té
+[D]Erreur fatale[E]
+J'aurais d[A]û t'écout[G]er [D]
+Je n'dissociais plus l'bien du m[E]al
 
 {refrain}
-Car [B]j'étais sur la route [A]toute la sainte jour[E]née
-Je [B]n'ai pas vu le doute [A]en toi s'immis[E]cer
-[B]J'étais sur la route [A]toute la sainte jour[E]née
-Si seulement [C#m]j'avais pu lire...
-[F#]Dans tes pen[B]sées
+Car j'étais sur la rou[A]te toute la sai[G]nte journée[D]
+Je n'ai pas vu le do[A]ute en t[G]oi s'immisc[D]er
+J'étais sur la ro[A]ute toute la [G]sainte journ[D]ée
+Si seulement j'av[Bm]ais pu lire...
+[E]Dans tes pensées
+[A]   [G]   [D]
+[A]   [G]   [D]
 {/refrain}
 
 {section Couplet 2}
-[B]J'avais perdu l'habi[B]tude
-[B]Le sentiment profond [F#]de soli[E]tude
-[B]Je n'apercevais [B]pas
-[B]Que tu étais derrière [F#]chacun de mes [E]pas
-[E]Erreur fa[F#]tale
-[B]Vient le temps des re[A]grets [E] [B] [E]
-Je me noie dans un verre [F#]de larmes
+[A]J'avais perdu l'habitu[A]de
+[A]Le sentiment profond de so[E]litude   [D]
+[A]Je n'apercevais pas[A]
+[A]Que tu étais derrière [E]chacun de m[D]es pas
+[D]Erreur fata[E]le
+Vient le tem[A]ps des [G]regrets  [D]
+Je me noie dans un verre de larmes[E]
 
 {refrain}
-[B]J'étais sur la route [A]toute la sainte jour[E]née
-Je [B]n'ai pas vu le doute [A]en toi s'immis[E]cer
-[B]J'étais sur la route [A]toute la sainte jour[E]née
-Si seulement [C#m]j'avais pu lire...
-[F#]Dans tes pen[B]sées
+J'étais sur la rou[A]te toute la sai[G]nte journée[D]
+Je n'ai pas vu le do[A]ute en t[G]oi s'immiscer[D]
+J'étais sur la ro[A]ute toute la [G]sainte journ[D]ée
+Si seulement j'avais pu l[Bm]ire...
+[E]Dans tes pensées
+[A]   [G]   [D]
+[A]   [G]   [D]
 {/refrain}
 
-{section Final}
-Car [B]j'étais sur la route [A]toute la sainte jour[E]née
-Je [B]n'ai pas vu le doute [A]en toi s'immis[E]cer
-[B]J'étais sur la route [A]toute la sainte jour[E]née
-Si seulement [C#m]j'avais pu lire...
-[F#]Dans tes pen[B]sées ... Sur la route [A]toute la sainte jour[E]née
-Je [B]n'ai pas vu le doute [A]en toi s'immis[E]cer
-Car [B]j'étais sur la route [A]toute la sainte jour[E]née
-Si seulement [C#m]j'avais pu lire...
-[F#]Dans tes pen[B]sées ...
-J'aurais vu le [G]doute en [E]toi s'immi[B]scer
+{refrain}
+J'étais sur la rou[A]te toute la sai[G]nte journée[D]
+Je n'ai pas vu le do[A]ute en t[G]oi s'immiscer[D]
+J'étais sur la ro[A]ute toute la [G]sainte journ[D]ée
+Si seulement j'avais pu l[Bm]ire...
+[E]Dans tes pensé[A]es
+{/refrain}

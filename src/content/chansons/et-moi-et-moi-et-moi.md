@@ -12,9 +12,9 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 ---
 
 {section Couplet 1}
-[D]Sept cent [A]millions [E]de Chinois
+[E]Sept cent [A]millions [E]de Chinois
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Avec ma [A]vie, mon pe[E]tit chez-moi
+[E]Avec ma [A]vie, mon pe[E]tit chez-moi
 [D]Mon mal de [A]tête, mon [E]point au foie
 
 {refrain}
@@ -23,10 +23,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 2}
-[D]Quatre-vingt [A]millions [E]d'Indonésiens
+[E]Quatre-vi[A]ngt millions [E]d'Indonésiens
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Avec ma [A]voiture [E]et mon chien
-[D]Son Cani[A]gou quand il a[E]boie
+[E]Avec ma [A]voiture [E]et mon chien
+[D]Son Cani[A]gou qu[E]and il aboie
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -34,10 +34,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 3}
-[D]Trois ou quatre cent millions de [A]noirs [E]
+[E]Trois ou qu[A]atre cent mi[E]llions de noirs
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Qui vais [A]au brunis[E]soir
-[D]Au sauna [A]pour perdre du [E]poids
+[E]Qui vais [A]au brunis[E]soir
+[D]Au sau[A]na pour per[E]dre du poids
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -45,10 +45,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 4}
-[D]Trois cent millions de [A]Sovié[E]tiques
+[E]Trois cent mil[A]lions de [E]Soviétiques
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Avec mes [A]manies et mes [E]tics
-[D]Dans mon p'tit [A]lit en plumes d'[E]oie
+[E]Avec mes [A]manies [E]et mes tics
+[D]Dans mon p'tit [A]lit en [E]plumes d'oie
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -56,10 +56,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 5}
-[D]Cinquante millions de [A]gens impar[E]faits
+[E]Cinquante mil[A]lions de gens[E] imparfaits
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Qui regarde [A]Catherine Lan[E]geais
-[D]A la telé[A]vision chez [E]moi
+[E]Qui rega[A]rde Cathe[E]rine Langeais
+[D]A la té[A]lé]vis[E]ion chez moi
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -67,10 +67,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 6}
-[D]Neuf cent millions de [A]crève-la-[E]faim
+[E]Neuf cent mil[A]lions de [E]crève-la-faim
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Avec mon [A]régime végéta[E]rien
-[D]Et tout le whis[A]ky que je m'en[E]voie
+[E]Avec mon [A]régime v[E]gétarien
+[D]Et tout le [A]whis]ky que [E]je m'envoie
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -78,10 +78,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 7}
-[D]Cinq cent millions de [A]Sud-Améri[E]cains
+[E]Cinq cent mill[A]ions de [E]Sud-Américains
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Je suis tout [A]nu dans mon [E]bain
-[D]Avec une fille [A]qui me net[E]toie
+[E]Je suis [A]tout nu[E] dans mon bain
+[D]Avec une [A]fille [A]qui [E]me nettoie
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -89,10 +89,10 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 8}
-[D]Cinquante millions de [A]Vietna[E]miens
+[E]Cinquante mil[A]lions de [E]Vietnamiens
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Le dimanche a la [A]chasse au la[E]pin
-[D]Avec mon fu[A]sil, je suis le [E]roi
+[E]Le dima[A]nche a la [E]chasse au lapin
+[D]Avec mon [A]fusil, [E]je suis le roi
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
@@ -100,12 +100,17 @@ pdf: "et-moi-et-moi-et-moi.pdf"
 {/refrain}
 
 {section Couplet 9}
-[D]Cinq cent milliards de [A]petits Mar[E]tiens
+[E]Cinq cent mil[A]liards de pe[E]tits Martiens
 [D]Et moi, et [A]moi, et mo[E]i
-[D]Comme un con de [A]pari[E]sien
-[D]J'attends mon [A]chèque de fin de [E]mois
+[E]Comme un co[A]n de [E]parisien
+[D]J'attends mon [A]chèque de [E]fin de mois
 
 {refrain}
 [D]J'y pense et [A]puis j'oubl[E]ie
 [D]C'est la vie, [A]c'est la v[E]ie
+[D]J'y pense et [A]puis j'oubl[E]ie
+[D]C'est la vie, [A]c'est la v[E]ie
+[D]J'y pense et [A]puis j'oubl[E]ie
+[D]C'est la vie, [A]c'est la v[E]ie
+[D]J'y pense et [A]puis j'oubl[E]ie
 {/refrain}

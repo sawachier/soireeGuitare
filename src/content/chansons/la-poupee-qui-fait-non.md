@@ -2,7 +2,7 @@
 title: "La poupée qui fait non"
 artist: "Michel Polnareff"
 key: "E"
-capo: 0
+capo: 2
 bpm: 125
 timeSig: "4/4"
 tempo: "moyen"

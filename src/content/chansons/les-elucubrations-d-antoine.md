@@ -2,7 +2,7 @@
 title: "Les élucubrations d'Antoine"
 artist: "Antoine"
 key: "E"
-capo: 0
+capo: 3
 bpm: 135
 timeSig: "4/4"
 tempo: "rapide"
